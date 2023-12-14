@@ -1,0 +1,37 @@
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <unordered_map>
+#include <vector>
+
+void createGraph(const std::string &word,
+                 const std::vector<std::string> &wordGroup,
+                 std::unordered_map<std::string, std::vector<std::string>> &graph) {
+    graph[word].insert(graph[word].end(), wordGroup.begin(), wordGroup.end());
+}
+
+int main() {
+    std::ifstream inputFile("input.txt");
+    std::unordered_map<std::string, std::vector<std::string>> graph;
+
+    if (!inputFile.is_open()) {
+        std::cerr << "Error opening file." << std::endl;
+        return 1;
+    }
+
+    std::string word;
+    while (inputFile >> word) {
+        for (size_t j = 3; j <= 5; ++j) {
+            std::vector<std::string> wordGroup;
+            for (size_t k = 0; k < j && inputFile >> word; ++k) {
+                wordGroup.push_back(word);
+            }
+            for (const auto &w : wordGroup) {
+                createGraph(w, wordGroup, graph);
+            }
+        }
+    }
+
+    inputFile.close();
+    return 0;
+}
